@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en" xmlns:v-on="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+    <title>Calculator</title>
+</head>
+<body>
+<div class="container">
+    <div id="app">
+        <h1 class="mb-4">Calculator</h1>
+        <h3>Type 2 numbers and choose operation.</h3>
+        <form class="form-inline">
+            <!-- Notice here the special modifier 'number' is passed in order to parse inputs as numbers.-->
+            <input class="form-control"
+                   v-model.number="a"
+                   @keyup.enter="calculate"
+            >
+            <select v-model="operator" class="form-control">
+                <option>+</option>
+                <option>-</option>
+                <option>*</option>
+                <option>/</option>
+            </select>
+            <!-- Notice here the special modifier 'number' is passed in order to parse inputs as numbers.-->
+            <input class="form-control"
+                   v-model.number="b"
+                   @keyup.enter="calculate"
+            >
+            <button class="btn btn-primary"
+                    type="submit"
+                    @click.prevent="calculate"
+            >
+                Calculate
+            </button>
+        </form>
+
+        <h2>Result: {{a}} {{operator}} {{b}} = {{c}}</h2>
+        <pre class="mt-4">{{ $data }}</pre>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.3.4/vue.js"></script>
+<script>
+    new Vue({
+        el: '#app',
+        data: {
+            a: 1,
+            b: 2,
+            c: null,
+            operator: "+"
+        },
+        methods:{
+            calculate: function(){
+                switch (this.operator) {
+                    case "+":
+                        this.c = this.a + this.b
+                        break;
+                    case "-":
+                        this.c = this.a - this.b
+                        break;
+                    case "*":
+                        this.c = this.a * this.b
+                        break;
+                    case "/":
+                        this.c = this.a / this.b
+                        break;
+                }
+            }
+        }
+    });
+</script>
+</body>
+</html>

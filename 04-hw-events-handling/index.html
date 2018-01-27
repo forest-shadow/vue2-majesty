@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en" xmlns:v-on="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+    <title>People of Vue</title>
+</head>
+<body>
+<div class="container">
+    <div id="app">
+        <h1 class="mb-4">People of Vue</h1>
+        <ul class="list-group mb-4">
+            <li class="list-group-item"
+                v-for="candidate in candidates"
+            >
+                <span class="mr-4">{{ candidate.name }} {{ candidate.votes }}</span>
+                <button class="btn btn-primary"
+                        @click="candidate.votes++"
+                >
+                    Vote
+                </button>
+            </li>
+        </ul>
+
+        <input class="form-control mb-4"
+               placeholder="press 'delete' to reset"
+               @keyup.delete="resetVotes"
+        >
+
+        <h2>Our major is {{ major.name }}!</h2>
+
+        <pre class="mt-4">{{ $data }}</pre>
+        <pre>{{ mayor }}</pre>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.3.4/vue.js"></script>
+<script>
+    new Vue({
+        data: {
+            candidates: [
+                {
+                    name: "Mr.Black",
+                    votes: 146
+                },
+                {
+                    name: "Mr.Pink",
+                    votes: 147
+                },
+                {
+                    name: "Mr.White",
+                    votes: 135
+                },
+                {
+                    name: "Mr.Brown",
+                    votes: 130
+                }
+            ]
+        },
+        el: '#app',
+        computed: {
+            major: function() {
+                var sortedCandidates = this.candidates.concat().sort(function(a, b) {
+                    return b.votes - a.votes;
+                });
+
+                return sortedCandidates[0];
+            }
+        },
+        methods: {
+            resetVotes: function() {
+                this.candidates.map(function(candidate) {
+                    return candidate.votes = 0;
+                });
+            }
+        }
+    });
+</script>
+</body>
+</html>
