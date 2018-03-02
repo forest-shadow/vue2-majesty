@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en" xmlns:v-on="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+    <title>User Stories</title>
+</head>
+<body>
+<div class="container">
+    <div id="app">
+        <h1 class="mb-4">Let's hear some stories!</h1>
+
+        <h3>Alex's stories</h3>
+        <ul class="list-group mb-4">
+            <story
+                v-for="story in storiesBy('Alex')"
+                :key="story.writer"
+                :story="story"
+            >
+            </story>
+        </ul>
+
+        <h3>John's stories</h3>
+        <ul class="list-group mb-4">
+            <story
+                v-for="story in storiesBy('John')"
+                :key="story.writer"
+                :story="story">
+            </story>
+        </ul>
+
+        <div class="form-group mb-4">
+            <label for="query">What are you looking for?</label>
+            <input type="text" v-model="query" class="form-control">
+        </div>
+        <ul class="list-group mb-4">
+            <story
+                v-for="story in search"
+                :key="story.writer"
+                :story="story">
+            </story>
+        </ul>
+
+        <pre class="mt-4">{{ $data }}</pre>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.3.4/vue.js"></script>
+<template id="story-template">
+    <li class="list-group-item">{{ story.writer }} said "{{ story.body }}"</li>
+</template>
+<script>
+  var stories = [
+    {
+      body: "I crashed my car today!",
+      writer: "Alex"
+    },
+    {
+      body: "Yesterday, someone stole my bag!",
+      writer: "John"
+    },
+    {
+      body: "Someone ate my chocolate...",
+      writer: "John"
+    },
+    {
+      body: "I ate someone's chocolate!",
+      writer: "Alex"
+    }
+  ];
+
+  Vue.component('story', {
+    props: ['story'],
+    template: '#story-template'
+  });
+
+  new Vue({
+    data: {
+      stories: stories,
+      query: ''
+    },
+    el: '#app',
+    methods: {
+      // a method which filters the stories depending on the writer
+      storiesBy: function (writer) {
+        return this.stories.filter(function (story) {
+          return story.writer === writer;
+        });
+      }
+    },
+    computed: {
+      search: function() {
+        var query = this.query;
+        return this.stories.filter(function(story) {
+          return story.body.includes(query);
+        })
+      }
+    }
+  });
+</script>
+</body>
+</html>

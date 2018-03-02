@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en" xmlns:v-on="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <title>Stories (Favorite Feature with Error)</title>
+</head>
+<body>
+<div class="container">
+    <div id="app">
+        <h1>Let's hear some stories!</h1>
+        <ul class="list-group mb-4">
+            <story v-for="story in stories" :story="story" :favorite="favorite" :key="story.writer"></story>
+        </ul>
+
+        <pre>{{ $data }}</pre>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.3.4/vue.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lodash@4.17.5/lodash.min.js"></script>
+<template id="story-template">
+    <li class="list-group-item">
+        <span class="mr-3">{{ story.writer }} said "{{ story.plot }}". Story upvotes {{ story.upvotes }}</span>
+        <button v-show="!story.voted" @click="upvote" class="btn btn-primary mr-3">Upvote</button>
+        <button v-show="!isFavorite" @click="setFavorite" class="btn btn-primary">Favorite</button>
+        <span v-show="isFavorite" class="fa fa-star pull-right" aria-hidden="true" style="margin-left: auto"></span>
+    </li>
+</template>
+<script>
+var stories = [
+    {
+        plot: 'My horse is amazing.',
+        writer: 'Mr. Weebl',
+        upvotes: 28,
+        voted: false
+    },
+    {
+        plot: 'Narwhals invented Shish Kebab.',
+        writer: 'Mr. Weebl',
+        upvotes: 8,
+        voted: false
+    },
+    {
+        plot: 'Narwhals invented Shish Kebab.',
+        writer: 'Darth Vader',
+        upvotes: 8,
+        voted: false
+    },
+    {
+        plot: 'One does not simply walk into Mordor.',
+        writer: 'Boromir',
+        upvotes: 74,
+        voted: false
+    }
+];
+
+Vue.component('story', {
+    template: '#story-template',
+    props: ['story', 'favorite'],
+    methods: {
+      upvote: function () {
+        this.story.upvotes += 1;
+        this.story.voted = true;
+      },
+      setFavorite: function () {
+        console.log(this.story);
+        this.favorite = this.story;
+      }
+    },
+    computed: {
+      isFavorite: function () {
+        return this.story === this.favorite;
+      }
+    }
+});
+
+new Vue({
+    el: '#app',
+    data: {
+        stories: stories,
+        favorite: {}
+    }
+});
+</script>
+</body>
+</html>
