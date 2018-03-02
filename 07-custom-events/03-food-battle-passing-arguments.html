@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en" xmlns:v-on="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+    <title>Food Battle</title>
+</head>
+<body>
+<div class="container">
+    <div id="app" class="text-center">
+        <p style="font-size: 140px;">{{ votes }}</p>
+
+        <div class="row mb-4">
+            <food @voted="countVote" name="Cheeseburger"></food>
+            <food @voted="countVote" name="Double Bacon Burger"></food>
+            <food @voted="countVote" name="Rodeo Burger"></food>
+        </div>
+
+        <h1>Log:</h1>
+        <ul class="list-group">
+            <li class="list-group-item" v-for="vote in log">{{ vote }}</li>
+        </ul>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.3.4/vue.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lodash@4.17.5/lodash.min.js"></script>
+<template id="food">
+    <div class="text-center col-lg-4">
+        <p style="font-size:40px">{{ votes }}</p>
+        <button class="btn btn-primary" @click="vote">{{ name }}</button>
+    </div>
+</template>
+<script>
+    Vue.component('food', {
+        template: '#food',
+        props: ['name'],
+        data: function() {
+            return {
+              votes: 0
+            }
+        },
+        methods: {
+            vote: function(event) {
+              this.votes++;
+              this.$emit('voted', event.srcElement.textContent);
+            }
+        }
+    });
+
+    new Vue({
+        el: '#app',
+        data: {
+          votes: 0,
+          log: []
+        },
+        methods: {
+          countVote: function(food) {
+            this.votes++;
+            this.log.push(food + ' received a vote.')
+          }
+        }
+    });
+</script>
+</body>
+</html>
