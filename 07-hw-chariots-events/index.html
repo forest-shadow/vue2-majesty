@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en" xmlns:v-on="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <title>Chariot shopping</title>
+</head>
+<body>
+<div class="container">
+    <div id="app">
+        <h1>Chariot shopping</h1>
+        <ul class="list-group mb-4">
+            <chariot
+                v-for="chariot in chariots"
+                :chariot="chariot"
+                :current-chariot="ridingChariot"
+                @riding-chariot="setRidingChariot(chariot)"
+                :key="chariot.name"
+            >
+            </chariot>
+        </ul>
+
+        <pre>{{ $data }}</pre>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.3.4/vue.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lodash@4.17.5/lodash.min.js"></script>
+<template id="chariot-template">
+    <li class="list-group-item">
+        <span class="mr-3">"{{ chariot.name }}" chariot has {{ chariot.horses }} horses!</span>
+        <button
+            class="btn btn-primary mr-3"
+            @click="takeRide"
+            :disabled="isCurrent"
+        >
+            {{ actionLabel }}
+        </button>
+    </li>
+</template>
+<script>
+var chariots = [
+    {
+        name: 'Olympus',
+        horses: 4
+    },
+    {
+        name: 'Sagitta',
+        horses: 3
+    },
+    {
+        name: 'Icarus',
+        horses: 2
+    },
+    {
+        name: 'Abraxas',
+        horses: 1
+    }
+];
+
+Vue.component('chariot', {
+    template: '#chariot-template',
+    props: ['chariot', 'currentChariot'],
+    methods: {
+        takeRide: function() {
+          this.$emit('riding-chariot', this.chariot);
+        }
+    },
+    computed: {
+        // is true when the chariot has more than the current one
+        hasMoreHorses: function () {
+            return this.currentChariot.horses < this.chariot.horses;
+        },
+        // is true when the chariot is the current one
+        isCurrent: function() {
+            return this.currentChariot.name === this.chariot.name;
+        },
+        // is true when there is no chariot current
+        noChariot: function () {
+            return this.currentChariot.name === null;
+        },
+        // define the actionLabel for each chariot
+        actionLabel: function () {
+            let actionLabel = '';
+
+            if (this.noChariot) {
+                actionLabel = 'Pick Chariot';
+            } else if (this.isCurrent) {
+                actionLabel = 'Riding!';
+            } else if (this.hasMoreHorses) {
+                actionLabel = 'Hire Horses!';
+            } else {
+                actionLabel = 'Dismiss Horses';
+            }
+
+            return actionLabel;
+        }
+    }
+});
+
+new Vue({
+    el: '#app',
+    data: {
+        chariots: chariots,
+        ridingChariot: {}
+    },
+    methods: {
+        setRidingChariot: function(chariot) {
+            this.ridingChariot = chariot;
+        }
+    }
+});
+</script>
+</body>
+</html>
