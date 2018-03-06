@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en" xmlns:v-on="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <title>Box classes binding</title>
+</head>
+<body>
+<div class="container text-center">
+    <div id="app">
+        <h1 class="mb-4">Toggle Box Colors</h1>
+        <div class="box-wrapper mb-4">
+            <div class="box" v-bind:class="{ 'red':color, 'blue':!color }"></div>
+            <div class="box" v-bind:class="{ 'purple':color, 'green':!color }"></div>
+            <div class="box" v-bind:class="{ 'red':color, 'blue':!color }"></div>
+            <div class="box" v-bind:class="{ 'purple':color, 'green':!color }"></div>
+        </div>
+        <button v-on:click="flipColor" class="btn btn-block btn-success mb-3">Flip color!</button>
+
+        <pre>{{ $data }}</pre>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.3.4/vue.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lodash@4.17.5/lodash.min.js"></script>
+<script>
+  new Vue({
+    el: '#app',
+    data: {
+      color: true
+    },
+    methods: {
+      flipColor: function () {
+        this.color = !this.color;
+      }
+    }
+  });
+</script>
+<style>
+.red {
+    background: #ff0000;
+}
+.blue {
+    background: #0000ff;
+}
+.purple {
+    background: #7b1fa2;
+}
+.green {
+    background: #4CAf50;
+}
+.box-wrapper {
+    display: flex;
+    justify-content: space-between;
+}
+.box {
+    float: left;
+    width: 200px;
+    height: 200px;
+    border: 1px solid rgba(0,0,0,.2);
+}
+</style>
+</body>
+</html>
