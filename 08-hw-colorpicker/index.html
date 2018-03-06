@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en" xmlns:v-on="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <title>Bindings in Action</title>
+</head>
+<body>
+<div id="app" :style="bgColor" class="app">
+    <div class="container">
+        <h1>Pick color for body</h1>
+        <input type="color" v-model="bgColor.backgroundColor" :value="bgColor.backgroundColor" class="mb-4">
+
+        <pre>{{ $data }}</pre>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.3.4/vue.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lodash@4.17.5/lodash.min.js"></script>
+<script>
+  new Vue({
+    el: '#app',
+    data: {
+      bgColor: {
+        backgroundColor: '#ffffff'
+      }
+    }
+  });
+</script>
+<style>
+    html, body
+    {
+        width: 100%;
+        height: 100%;
+
+        margin: 0;
+        padding: 0;
+    }
+
+    .app {
+        width: 100%;
+        height: 100%;
+    }
+
+    .app > .container {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        margin-top: -25%;
+        margin-left: -25%;
+    }
+</style>
+</body>
+</html>
