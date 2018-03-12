@@ -29,7 +29,7 @@
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.3.4/vue.js"></script>
-<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <template id="template-story-row">
     <tr>
         <td>{{ story.id }}</td>
@@ -51,24 +51,13 @@
     methods: {
       upvoteStory: function(story) {
         story.upvotes++;
-        $.ajax({
-          url: '/api/stories/' + story.id,
-          type: 'PATCH',
-          data: story
-        })
+        axios.patch('/api/stories/' + story.id, story);
       },
       deleteStory: function (story) {
-        // find story
-        let index = vm.stories.indexOf(story);
+        let index = this.$parent.stories.indexOf(story);
 
-        // delete it from DOM
-        vm.stories.splice(index, 1);
-
-        // make DELETE request
-        $.ajax({
-          url: '/api/stories/' + story.id,
-          type: 'DELETE'
-        })
+        this.$parent.stories.splice(index, 1);
+        axios.delete('/api/stories/' + story.id);
       }
     }
   });
@@ -79,9 +68,12 @@
     },
     el: '#app',
     mounted: function () {
-      $.get('/api/stories', function(data) {
-        vm.stories = data;
-      })
+      // GET request
+      axios.get('/api/stories')
+        .then(function (response) {
+          Vue.set(vm, 'stories', response.data)
+          // Or we as we did before vm.stories = response.data
+        })
     }
   });
 </script>
