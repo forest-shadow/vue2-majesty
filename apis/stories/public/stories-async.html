@@ -33,13 +33,37 @@
 <template id="template-story-row">
     <tr>
         <td>{{ story.id }}</td>
-        <td>{{ story.plot }}</td>
-        <td>{{ story.writer }}</td>
+        <td>
+            <!--if editing story, display the input for plot-->
+            <input
+                class="form-control"
+                v-if="story.editing"
+                v-model="story.plot"
+            />
+            <!--in other occasions, show the story's plot-->
+            <span v-else>{{ story.plot }}</span>
+        </td>
+        <td>
+            <!--if editing story, display the input for writer-->
+            <input
+                    class="form-control"
+                    v-if="story.editing"
+                    v-model="story.writer"
+            />
+            <!--in other occasions, show the story's plot-->
+            <span v-else>{{ story.writer }}</span>
+        </td>
         <td>{{ story.upvotes }}</td>
         <td>
-            <div class="btn-group">
+            <div v-if="!story.editing" class="btn-group">
                 <button @click="upvoteStory(story)" class="btn btn-primary">Upvote</button>
+                <button @click="editStory(story)" class="btn btn-default">Edit</button>
                 <button @click="deleteStory(story)" class="btn btn-danger">Delete</button>
+            </div>
+            <!--If story under edit, display this group of buttons-->
+            <div class="btn-group" v-else>
+                <button @click="updateStory(story)" class="btn btn-primary">Update Story</button>
+                <button @click="story.editing=false" class="btn btn-default">Cancel</button>
             </div>
         </td>
     </tr>
@@ -53,11 +77,19 @@
         story.upvotes++;
         axios.patch('/api/stories/' + story.id, story);
       },
+      editStory: function(story) {
+        story.editing = true;
+      },
       deleteStory: function (story) {
         let index = this.$parent.stories.indexOf(story);
 
         this.$parent.stories.splice(index, 1);
         axios.delete('/api/stories/' + story.id);
+      },
+      updateStory: function(story) {
+        axios.patch('/api/stories/' + story.id, story);
+        // Set editing to false to show actions again and hide the inputs
+        story.editing = false;
       }
     }
   });
@@ -71,8 +103,14 @@
       // GET request
       axios.get('/api/stories')
         .then(function (response) {
-          Vue.set(vm, 'stories', response.data)
-          // Or we as we did before vm.stories = response.data
+          // set data on vm
+          let storiesReady = response.data.map(function( story) {
+            story.editing = false;
+            return story;
+          });
+
+          vm.stories = storiesReady;
+          // Vue.set(vm, 'stories', storiesReady)
         })
     }
   });
