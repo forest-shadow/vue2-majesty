@@ -22,8 +22,10 @@
             </tr>
             <tr v-for="story in stories" is="story" :story="story"></tr>
         </table>
-        <p class="lead">Here's a list of all your stories</p>
-
+        <p class="lead">
+            <span>Here's a list of all your stories</span>
+            <button @click="createStory()" class="btn btn-primary">Add a new one?</button>
+        </p>
         <pre class="mt-4">{{ $data }}</pre>
     </div>
 </div>
@@ -62,7 +64,23 @@
             </div>
             <!--If story under edit, display this group of buttons-->
             <div class="btn-group" v-else>
-                <button @click="updateStory(story)" class="btn btn-primary">Update Story</button>
+                <!--If the story is an old one then we want to update it
+                    TIP: if the story is taken from the db then it will have and id-->
+                <button
+                    class="btn btn-primary"
+                    v-if="story.id"
+                    @click="updateStory(story)"
+                >
+                    Update Story
+                </button>
+                <!--If the story is new we want to store it-->
+                <button
+                    class="btn btn-success"
+                    v-else
+                    @click="storeStory(story)"
+                >
+                    Save New Story
+                </button>
                 <button @click="story.editing=false" class="btn btn-default">Cancel</button>
             </div>
         </td>
@@ -86,6 +104,12 @@
         this.$parent.stories.splice(index, 1);
         axios.delete('/api/stories/' + story.id);
       },
+      storeStory: function(story) {
+        axios.post('/api/stories', story).then(function() {
+          story.editing = false;
+          vm.fetchStories();
+        })
+      },
       updateStory: function(story) {
         axios.patch('/api/stories/' + story.id, story);
         // Set editing to false to show actions again and hide the inputs
@@ -99,19 +123,34 @@
       stories: []
     },
     el: '#app',
-    mounted: function () {
-      // GET request
-      axios.get('/api/stories')
-        .then(function (response) {
-          // set data on vm
-          let storiesReady = response.data.map(function( story) {
-            story.editing = false;
-            return story;
-          });
+    methods: {
+      createStory: function() {
+        let newStory = {
+          'plot': '',
+          'upvotes': 0,
+          'editing': true
+        };
+        this.stories.push(newStory);
+      },
+      fetchStories: function() {
+        let vm = this;
 
-          vm.stories = storiesReady;
-          // Vue.set(vm, 'stories', storiesReady)
-        })
+        axios.get('/api/stories')
+          .then(function (response) {
+            // set data on vm
+            let storiesReady = response.data.map(function( story) {
+              story.editing = false;
+              return story;
+            });
+
+            // vm.stories = storiesReady;
+             Vue.set(vm, 'stories', storiesReady)
+            // or: vm.stories = storiesReady
+          })
+      }
+    },
+    mounted: function() {
+      this.fetchStories()
     }
   });
 </script>
