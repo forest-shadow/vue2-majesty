@@ -49,12 +49,11 @@ let vm = new Vue({
       axios.get('/api/stories')
         .then(function (response) {
           // set data on vm
-          let storiesReady = response.data.map(function( story) {
+          let storiesReady = response.data.map(function(story) {
             story.editing = false;
             return story;
           });
 
-          // vm.stories = storiesReady;
           Vue.set(vm, 'stories', storiesReady)
           // or: vm.stories = storiesReady
         })

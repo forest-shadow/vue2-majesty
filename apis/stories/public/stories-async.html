@@ -48,9 +48,9 @@
         <td>
             <!--if editing story, display the input for writer-->
             <input
-                    class="form-control"
-                    v-if="story.editing"
-                    v-model="story.writer"
+                class="form-control"
+                v-if="story.editing"
+                v-model="story.writer"
             />
             <!--in other occasions, show the story's plot-->
             <span v-else>{{ story.writer }}</span>
