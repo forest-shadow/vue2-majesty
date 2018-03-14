@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en" xmlns:v-on="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+    <title>Get Stories Async From API</title>
+</head>
+<body>
+<div class="container">
+    <div id="app">
+        <h1 class="mb-4">Let's hear some stories!</h1>
+        <div class="pagination mb-4">
+            <button
+                class="btn btn-default mr-4"
+                @click="fetchStories(pagination.prev_page_url)"
+                :disabled="!pagination.prev_page_url"
+            >
+                Previous
+            </button>
+            <span class="mr-4" >Page {{pagination.current_page}} of {{pagination.last_page}}</span>
+            <button
+                class="btn btn-default mr-4"
+                @click="fetchStories(pagination.next_page_url)"
+                :disabled="!pagination.next_page_url"
+            >
+                Next
+            </button>
+        </div>
+        <table class="table table-striped">
+            <tr>
+                <th>#</th>
+                <th>Plot</th>
+                <th>Writer</th>
+                <th>Upvotes</th>
+                <th>Actions</th>
+            </tr>
+            <tr v-for="story in stories" is="story" :story="story"></tr>
+        </table>
+        <p class="lead">
+            <span>Here's a list of all your stories</span>
+            <button @click="createStory()" class="btn btn-primary">Add a new one?</button>
+        </p>
+        <pre class="mt-4">{{ $data }}</pre>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.3.4/vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<template id="template-story-row">
+    <tr>
+        <td>{{ story.id }}</td>
+        <td>
+            <!--if editing story, display the input for plot-->
+            <input
+                class="form-control"
+                v-if="story.editing"
+                v-model="story.plot"
+            />
+            <!--in other occasions, show the story's plot-->
+            <span v-else>{{ story.plot }}</span>
+        </td>
+        <td>
+            <!--if editing story, display the input for writer-->
+            <input
+                class="form-control"
+                v-if="story.editing"
+                v-model="story.writer"
+            />
+            <!--in other occasions, show the story's plot-->
+            <span v-else>{{ story.writer }}</span>
+        </td>
+        <td>{{ story.upvotes }}</td>
+        <td>
+            <div v-if="!story.editing" class="btn-group">
+                <button @click="upvoteStory(story)" class="btn btn-primary">Upvote</button>
+                <button @click="editStory(story)" class="btn btn-default">Edit</button>
+                <button @click="deleteStory(story)" class="btn btn-danger">Delete</button>
+            </div>
+            <!--If story under edit, display this group of buttons-->
+            <div class="btn-group" v-else>
+                <!--If the story is an old one then we want to update it
+                    TIP: if the story is taken from the db then it will have and id-->
+                <button
+                    class="btn btn-primary"
+                    v-if="story.id"
+                    @click="updateStory(story)"
+                >
+                    Update Story
+                </button>
+                <!--If the story is new we want to store it-->
+                <button
+                    class="btn btn-success"
+                    v-else
+                    @click="storeStory(story)"
+                >
+                    Save New Story
+                </button>
+                <button @click="story.editing=false" class="btn btn-default">Cancel</button>
+            </div>
+        </td>
+    </tr>
+</template>
+<script src="js/stories-async-app.js"></script>
+</body>
+</html>
