@@ -6,15 +6,16 @@
         <input placeholder="Email address" class="form-control mb-4">
         <input placeholder="Pick a password" class="form-control mb-4">
         <input placeholder="Confirm password" class="form-control mb-4">
-        <button class="btn btn-primary">Sign up</button>
+        <button class="btn btn-primary mb-4">Sign up</button>
 
-        <famous></famous>
+        <famous :stories="stories"></famous>
     </div>
 </template>
 
 <script>
 import Famous from './Famous.vue'
 export default {
+  props: ['stories'],
   components: {
     Famous
   },
