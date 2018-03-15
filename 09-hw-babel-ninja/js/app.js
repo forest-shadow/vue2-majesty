@@ -3,7 +3,10 @@ class Ninja {
     this.name = name;
   }
 
-  announce() {alert(`${this.name} Ninja is here!`)}
+  announce() {
+    alert(`${this.name} Ninja is here!`);
+    console.log(`${this.name} Ninja is here!`);
+  }
 }
 
 let testNinja = new Ninja('Shadowbox');
