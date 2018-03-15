@@ -10,7 +10,16 @@
     </div>
 </template>
 <script>
+import {store} from '../store.js'
+
 export default {
-  props: ['stories']
+  data () {
+    return {
+      stories: store.stories
+    }
+  },
+  created () {
+    console.log('stories')
+  }
 }
 </script>
